@@ -11,29 +11,30 @@ const Register = () => {
     email: "",
     password: "",
     phoneNumber: "",
-    
+    isDoctor:false,
   });
-  
-  const [isDoctor , setIsDoctor] = useState(false)
 
-  const handleChecked = () =>{
-    setIsDoctor(!isDoctor)
+  const [dateofBirth , setdateofBirth] = useState()
+  const concat = {
+    ...registerData , dateofBirth
   }
+  
+ 
 
   const dispatch = useDispatch();
 
-  // const handleChange = (e) => {
-  //   const { name, value, type, checked } = e.target;
-  //   setRegisterData({
-  //     ...registerData,
-  //     [name]: type === "checkbox" ? checked : value,
-  //   });
-  // };
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setRegisterData({
+      ...registerData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault(); 
-    dispatch(userRegister(registerData));
-    console.log("Submitting:", registerData);
+    dispatch(userRegister(concat));
+    console.log("Submitting:", concat );
   };
 
   return (
@@ -51,9 +52,7 @@ const Register = () => {
               name="name"
               placeholder="Name"
               value={registerData.name}
-              onChange={(e) => {
-                setRegisterData({...registerData,name:e.target.value})
-              }}
+              onChange={handleChange}
             />
             <input
               className="input"
@@ -61,9 +60,7 @@ const Register = () => {
               name="lastname"
               placeholder="Last Name" 
               value={registerData.lastname}
-              onChange={(e) => {
-                setRegisterData({...registerData,lastname:e.target.value})
-              }}
+              onChange={handleChange}
             />
             <input
               className="input"
@@ -71,9 +68,7 @@ const Register = () => {
               name="email"
               placeholder="Email"
               value={registerData.email}
-              onChange={(e) => {
-                setRegisterData({...registerData,email:e.target.value})
-              }}
+              onChange={handleChange}
             />
             <input
               className="input"
@@ -81,9 +76,7 @@ const Register = () => {
               name="password"
               placeholder="Password"
               value={registerData.password}
-              onChange={(e) => {
-                setRegisterData({...registerData,password:e.target.value})
-              }}
+              onChange={handleChange}
             />
             <input
               className="input"
@@ -91,18 +84,16 @@ const Register = () => {
               name="phoneNumber"
               placeholder="Phone Number"
               value={registerData.phoneNumber}
-              onChange={(e) => {
-                setRegisterData({...registerData,phoneNumber:e.target.value})
-              }}
+              onChange={handleChange}
             />
             <input
               className="input"
               type="date"
-              name="dateOfBrith"
+              name="dateofBirthBrith"
               placeholder="Date Of Birth"
-              value={registerData.dateOfBrith}
-              onChange={(e) => {
-                setRegisterData({...registerData,dateOfBrith:e.target.value})
+              value={dateofBirth}
+              onChange={(e) =>{
+                setdateofBirth(e.target.value)
               }}
             />
             <br />
@@ -111,8 +102,8 @@ const Register = () => {
               <input
                 type="checkbox"
                 name="isDoctor" 
-                checked={isDoctor} 
-                onChange={handleChecked}
+                checked={registerData.isDoctor} 
+                onChange={handleChange}
               />
             </label>
 

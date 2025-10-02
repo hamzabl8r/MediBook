@@ -24,7 +24,7 @@ const userSchema = new schema({
     required: true 
   },
   dateofBirth: {
-    type: String,
+    type: Date,
     }, 
     isDoctor :{
       type : Boolean,

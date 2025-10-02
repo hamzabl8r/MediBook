@@ -27,7 +27,7 @@ router.post("/register",registerRules() , validation ,async (req, res) => {
             id : newUser._id ,
             name : newUser.name
         }
-        const token =await jwt.sign(payload , process.env.SECRET_KEY , {expiresIn : '1h'})
+        const token =await jwt.sign(payload , process.env.SECRET_KEY , {expiresIn : '86400'})
         
     res.status(201).json({ user: newUser, msg: "User registered successfully" });
   } catch (error) {

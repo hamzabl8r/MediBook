@@ -33,6 +33,9 @@ const userSchema = new schema({
     specialty: {
     type: String
   },
+  address: {
+    type: String
+  },
     
 }); 
  

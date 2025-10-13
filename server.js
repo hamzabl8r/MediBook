@@ -10,6 +10,8 @@ const PORT = process.env.PORT
 
 const Appointment = require('./routes/Appointment')
 const user = require('./routes/user')
+const Current = require('./routes/user')
+const Contact = require('./routes/contactRoutes')
 
  
 
@@ -22,8 +24,10 @@ app.get('/', (req, res) => {
 })
  
 
-app.use('/appointment' ,Appointment)
+app.use('/appointement' ,Appointment)
+app.use('/current' ,Current)
 app.use('/user' ,user)
+app.use('/contact', Contact)
 
 
 

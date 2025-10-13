@@ -1,63 +1,111 @@
-const AppointmentRouter = require("express").Router();
-const Appointment = require("../models/Appointment");
+const AppointementRouter = require("express").Router();
+const {
+  sendAppointmentConfirmationEmail,
+} = require("../Mailer/AppointmentMailer");
+const Appointement = require("../models/Appointment");
+const User = require("../models/users");
 
-// add appointment
-AppointmentRouter.post("/add", async (req, res) => {
-    try {
-        const { doctorId, patientId, appointmentDate, reason } = req.body;
-        const newAppointment = await new Appointment(req.body);
-        newAppointment.save();
-        res.send({ appointment: newAppointment, msg: "Appointment added" });
-    } catch (error) {
-        res.send({ msg: error.msg });
-    }
-});
+// add appointement
+AppointementRouter.post("/add", async (req, res) => {
+  try {
+    const { doctorId, patientId, selectedDate, selectedTime, fee } = req.body;
 
-// get all appointments
-AppointmentRouter.get("/", async (req, res) => {
-    try {
-        let result = await Appointment.find();
-        res.send({ appointments: result, msg: "All appointments" });
+    const newAppointement = new Appointement(req.body);
+
+    const savedAppointment = await newAppointement.save();
+
+    const patient = await User.findById(patientId);
+    const doctor = await User.findById(doctorId);
+    const date = req.body.selectedDate
+    const time = req.body.selectedTime
+    if (doctor && patient) {
+      sendAppointmentConfirmationEmail(patient, doctor, savedAppointment, date, time);
+    } else {
+      console.warn("Could not find doctor or patient to send confirmation email.");
     }
-    catch (error) {
-        console.log(error);
-    }   
-});
-// get appointment by id    
-AppointmentRouter.get("/:id", async (req, res) => {
-    try {
-        let result = await Appointment.findById(req.params.id);
-        res.send({ appointment: result, msg: "Appointment by id" });
-    } catch (error) {
-        console.log(error);
-    }
-});
-// get appointments by doctor id
-AppointmentRouter.get("/doctor/:doctorId", async (req, res) => {
-    try {
-        let result = await Appointment.find({ doctorId: req.params.doctorId });
-        res.send({ appointments: result, msg: "Appointments by doctor id" });
-    } catch (error) {
-        console.log(error);
-    }
-});
-// get appointments by patient id
-AppointmentRouter.get("/patient/:patientId", async (req, res) => {
-    try {
-        let result = await Appointment.find({ patientId: req.params.patientId });
-        res.send({ appointments: result, msg: "Appointments by patient id" });
-    } catch (error) {
-        console.log(error);
-    }
+    
+    res.status(201).send({ 
+        msg: "Appointment created successfully!", 
+        appointment: savedAppointment 
+    });
+
+  } catch (error) {
+    console.error("Error creating appointment:", error);
+    res.status(500).send({ msg: "Server error while creating appointment." });
+  }
 });
 
-AppointmentRouter.delete("/:id", async (req, res) => {
-    try {
-        let result = await Appointment.findByIdAndDelete(req.params.id);
-        res.send({ msg: "Appointment deleted", appointment: result });
-    } catch (error) {
-        console.log(error);
-    }
+// get all appointements
+AppointementRouter.get("/", async (req, res) => {
+  try {
+    let result = await Appointement.find()
+      .populate("doctorId", "name lastname phoneNumber address")
+      .populate("patientId", "name");
+    res.send({ appointements: result });
+  } catch (error) {
+    console.log(error);
+  }
+});
+// get appointement by id
+AppointementRouter.get("/:id", async (req, res) => {
+  try {
+    let result = await Appointement.findById(req.params.id)
+      .populate("doctorId", "name lastname phoneNumber")
+      .populate("patientId", "name");
+    res.send({ appointement: result, msg: "Appointement by id" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+// get appointements by doctor id
+AppointementRouter.get("/doctor/:doctorId", async (req, res) => {
+  try {
+    let result = await Appointement.find({
+      doctorId: req.params.doctorId,
+    }).populate("patientId", "name lastname");
+    res.send({ appointements: result, msg: "Appointements by doctor id" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+// get appointements by patient id
+AppointementRouter.get("/patient/:patientId", async (req, res) => {
+  try {
+    let result = await Appointement.find({ patientId: req.params.patientId });
+    res.send({ appointements: result, msg: "Appointements by patient id" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+AppointementRouter.put("/:id", async (req, res) => {
+  try {
+    const { selectedDate, selectedTime, status } = req.body;
+    const updateFields = {};
+    let result = await Appointement.findById(req.params.id);
+    if (!result) res.status(404).send({ msg: "Appointemnet Not Found " });
+    if (selectedDate) updateFields.date = date;
+    if (selectedTime) updateFields.time = time;
+    if (status) updateFields.status = status;
+
+    const updateAppointement = await Appointement.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateFields }
+    );
+    res
+      .status(200)
+      .send({ appointements: updateAppointement, msg: "Appointemen Updated" });
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
-module.exports = AppointmentRouter;
+AppointementRouter.delete("/:id", async (req, res) => {
+  try {
+    let result = await Appointement.findByIdAndDelete(req.params.id);
+    res.send({ msg: "Appointement deleted", appointement: result });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+module.exports = AppointementRouter;

@@ -12,18 +12,21 @@ const appointmentSchema = new schema({
         ref: "User",
         required: true
     },
-    appointmentDate: {
+    selectedDate: {
         type: Date,
+        required: true
+    },
+    selectedTime: {
+        type: String,
         required: true
     },
     reason: {
         type: String,
-        required: true
     },
     status: {
         type: String,
-        enum: ["pending", "completed", "cancelled"],
         default: "pending"
-    }
+    },
+    fee:Number
 });
 module.exports = mongoose.model("Appointment", appointmentSchema);

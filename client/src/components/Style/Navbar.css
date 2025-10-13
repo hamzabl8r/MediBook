@@ -1,0 +1,104 @@
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  padding: 10px 40px; 
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); 
+  height: 70px;
+  box-sizing: border-box;
+}
+
+/* Logo */
+.navbar-logo .logo-png {
+  margin-left: 30px ;
+  height: 95px; 
+  width: auto; 
+}
+
+/*  Links  */
+.navbar-links {
+  display: flex;
+  list-style: none; 
+  margin: 0;
+  padding: 0;
+  gap: 35px; 
+}
+
+.navbar-links li a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 600;
+  font-size: 1rem;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent; 
+  transition: color 0.2s, border-bottom-color 0.2s;
+}
+
+.navbar-links li a:hover {
+  color: #007bff; 
+  border-bottom-color: #007bff;
+}
+
+/* Login, Logout, Appointment */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+}
+
+.profile-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+  
+}
+
+.profile-link:hover {
+  color: #007bff;
+}
+
+/* --- Button Styles --- */
+
+.login-btn,
+.appointment-btn,
+.logout-btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 25px; 
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.login-btn:hover,
+.appointment-btn:hover,
+.logout-btn:hover {
+  transform: scale(1.05); 
+}
+
+/* Login Button */
+.login-btn {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+/* Appointment Button */
+.appointment-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Logout Button */
+.logout-btn {
+  background-color: #dc3545; 
+  color: white;
+}

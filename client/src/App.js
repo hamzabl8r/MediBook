@@ -1,44 +1,40 @@
-import React, { useEffect } from "react";
-import Login from "./components/Login";
-// Assuming you have a Home component for the root path
-// import Home from './components/Home'
+import { useEffect, useState } from "react";
+import Auth from "./components/Auth";
 import { Routes, Route } from "react-router-dom";
-import Register from "./components/Register";
-import Accueil from "./components/Accueil";
 import { useDispatch } from "react-redux";
-import { userCurrent } from "./Js/userSlice/userSlice";
+import { userCurrent } from "./Js/Slice/userSlice";
 import PrivateRoute from "./components/Route/PrivateRoute";
-import Otp from "./components/Otp";
+import Home from "./components/Home";
+import Navbar from "./components/Navbar";
+import Profil from "./components/Profil";
+import Appointement from "./components/Appointement";
+import FindDoctorsPage from "./components/FindDoctorsPage";
+import Services from "./components/Services";
+import Contact from "./components/Contact";
 
 const App = () => {
   const isAuth = localStorage.getItem("token");
   const dispatch = useDispatch();
+  const [ping, setping] = useState(false);
   useEffect(() => {
     if (isAuth) {
       dispatch(userCurrent());
     }
-  }, []);
+  }, [ping]);
   return (
     <>
-    <Routes>
-
-      {/* Route for the homepage */}
-      {/* <Route path='/' element={<Home />} /> */}
-
-      {/* Corrected route for the login page */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route
-        path="/current"
-        element={
-          <PrivateRoute>
-            <Accueil />
-          </PrivateRoute>
-        }
-       />
-       <Route path="/verification-otp" element={<Otp />} />
-    </Routes>
-    
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/doctor" element={<FindDoctorsPage />} />
+        <Route path="/appointement" element={<Appointement />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/profil" element={<Profil />} />
+        </Route>
+      </Routes>
     </>
   );
 };

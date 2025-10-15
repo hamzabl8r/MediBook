@@ -34,7 +34,7 @@
 }
 
 .hero-btn {
-    background-color: #4CAF50; /* Accent green */
+    background-color: #4CAF50; 
     color: white;
     padding: 15px 30px;
     border: none;
@@ -46,7 +46,7 @@
 }
 
 .hero-btn:hover {
-    background-color: #388E3C; /* Darker green */
+    background-color: #388E3C; 
     transform: translateY(-2px);
 }
 
@@ -93,7 +93,7 @@
     height: 60px;
     object-fit: contain;
     margin-bottom: 20px;
-    filter: drop-shadow(0 2px 5px rgba(0, 128, 0, 0.2)); /* Subtle shadow for icons */
+    filter: drop-shadow(0 2px 5px rgba(0, 128, 0, 0.2)); 
 }
 
 .service-card h3 {
@@ -107,7 +107,7 @@
     color: #666666;
     font-size: 1em;
     line-height: 1.6;
-    flex-grow: 1; /* Allows description to take available space */
+    flex-grow: 1; 
     margin-bottom: 20px;
 }
 
@@ -120,13 +120,13 @@
 }
 
 .learn-more-link:hover {
-    color: #1F4A8F; /* Darker blue */
+    color: #1F4A8F; 
     text-decoration: underline;
 }
 
 /* Call to Action Section */
 .services-cta {
-    background-color: #2A64B9; /* Primary blue */
+    background-color: #2A64B9; 
     color: white;
     text-align: center;
     padding: 60px 20px;
@@ -145,7 +145,7 @@
 }
 
 .main-cta-btn {
-    background-color: #4CAF50; /* Accent green */
+    background-color: #4CAF50;
     color: white;
     padding: 15px 35px;
     border: none;
@@ -158,7 +158,7 @@
 }
 
 .main-cta-btn:hover {
-    background-color: #388E3C; /* Darker green */
+    background-color: #388E3C;
     transform: translateY(-3px);
 }
 
@@ -207,6 +207,6 @@
 
 @media (max-width: 480px) {
     .services-grid {
-        grid-template-columns: 1fr; /* Single column on very small screens */
+        grid-template-columns: 1fr;
     }
 }

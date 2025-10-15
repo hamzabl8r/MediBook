@@ -13,6 +13,9 @@ const { userCurrent } = require("../client/src/Js/Slice/userSlice");
 const users = require("../models/users");
 require("dotenv").config({ path: "../.env" });
 const { sendWelcomeEmail } = require("../Mailer/RegisterMailer");
+const { sendPasswordResetEmail } = require('../Mailer/ForgotPasswordMailer');
+const crypto = require("crypto");
+
 
 // register route
 router.post("/register", registerRules(), validation, async (req, res) => {
@@ -99,6 +102,69 @@ router.post("/login", loginRules(), validation, async (req, res) => {
     console.log(error);
   }
 });
+// forgot Password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const user = await User.findOne( req.body.email );
+    if (!user) {
+      return res.status(404).json({ msg: 'User with this email does not exist.' });
+    }
+
+    const plainToken = crypto.randomBytes(20).toString('hex');
+
+   user.resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(plainToken)
+      .digest('hex');
+      
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; 
+
+    await user.save();
+    
+    const resetUrl = `http://localhost:3000/reset-password/${plainToken}`;
+
+    sendPasswordResetEmail(user, resetUrl);
+
+    res.status(200).json({ msg: 'Password reset link has been sent to your email.' });
+
+  } catch (error) {
+    console.error("Forgot Password Error:", error);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+});
+// reset password
+router.put('/reset-password/:token', async (req, res) => {
+  try {
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }, 
+    });
+
+    if (!user) {
+      return res.status(400).json({ msg: 'Invalid or expired token. Please try again.' });
+    }
+    
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(req.body.password, salt);
+    
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    
+    await user.save();
+    
+    res.status(200).json({ msg: 'Password has been reset successfully.' });
+
+  } catch (error) {
+    console.error("Reset Password Error:", error);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
 
 // Current Route
 router.get("/current", isAuth, async (req, res) => {

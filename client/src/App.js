@@ -11,7 +11,8 @@ import Appointement from "./components/Appointement";
 import FindDoctorsPage from "./components/FindDoctorsPage";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
-
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 const App = () => {
   const isAuth = localStorage.getItem("token");
   const dispatch = useDispatch();
@@ -31,6 +32,9 @@ const App = () => {
         <Route path="/appointement" element={<Appointement />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/reset" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+
         <Route element={<PrivateRoute />}>
           <Route path="/profil" element={<Profil />} />
         </Route>

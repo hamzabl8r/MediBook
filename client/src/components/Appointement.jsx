@@ -29,9 +29,7 @@ const DoctorSelector = ({ doctors, selectedDoctor, onSelect, onNext }) => (
     </div>
 );
 
-// =================================================================
 // Date & Time 
-// =================================================================
 const DateTimePicker = ({ doctor, selectedDate, onSelectDate, selectedTime, onSelectTime, onNext, onBack }) => {
     const today = new Date();
     const currentYear = today.getFullYear();
@@ -90,9 +88,7 @@ const DateTimePicker = ({ doctor, selectedDate, onSelectDate, selectedTime, onSe
     );
 };
 
-// =================================================================
 // Confirmation Step
-// =================================================================
 const Confirmation = ({ doctor, date, time, onConfirm, onBack, status }) => {
     const formatDate = (day) => {
         if (!day) return '';
@@ -121,9 +117,7 @@ const Confirmation = ({ doctor, date, time, onConfirm, onBack, status }) => {
     );
 };
 
-// =================================================================
 //  Booking Confirmed View
-// =================================================================
 const BookingConfirmed = ({ bookingDetails }) => {
     const navigate = useNavigate();
     const { doctor, date, time } = bookingDetails;
@@ -152,9 +146,7 @@ const BookingConfirmed = ({ bookingDetails }) => {
 };
 
 
-// =================================================================
 //  Appointment 
-// =================================================================
 const Appointment = () => {
     const { doctorId } = useParams();
     const dispatch = useDispatch();

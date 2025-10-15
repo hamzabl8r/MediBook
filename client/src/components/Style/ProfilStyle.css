@@ -281,3 +281,88 @@
   background-color: #5a6268;
 }
 
+/* Responsive  */
+@media (max-width: 768px) {
+  .profil {
+    height: auto;
+    padding: 20px 0;
+  }
+
+  .profil-box {
+    width: 95%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .left {
+    width: 100%;
+    height: auto;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 0;
+  }
+
+  .userImg {
+    width: 100px;
+    height: 100px;
+  }
+
+  .user-name {
+    font-size: 1.5rem;
+  }
+
+  .links {
+    height: auto;
+    margin-top: 15px;
+  }
+
+  .right {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .addAppointement,
+  .showDoctor {
+    height: auto;
+    overflow-y: visible;
+  }
+  
+  .user-info-ul {
+    flex-direction: column;
+  }
+  
+  .user-info-li {
+    width: 90%;
+  }
+
+  .profil-header {
+    width: 100%;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .edit-form {
+    width: 100%;
+  }
+
+  .form-group {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .form-group label {
+    width: auto;
+    margin-bottom: 8px;
+  }
+
+  .form-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    width: 100%;
+  }
+}

@@ -120,3 +120,39 @@
     border: none;
     
 }
+
+/* Responsive  */
+@media (max-width: 768px) {
+  .login-container {
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+    padding: 20px 0;
+  }
+
+  .logo {
+    width: 250px;
+    height: auto;
+  }
+
+  .btn-head {
+    width: 80%;
+  }
+
+  .input {
+    width: 90%;
+  }
+
+  .double-btn {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .login-btn,
+  .forgot-btn {
+    width: 90%;
+    padding: 0;
+    text-align: center;
+  }
+}

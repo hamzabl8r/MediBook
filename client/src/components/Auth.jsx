@@ -3,7 +3,7 @@ import "./Style/LoginStyle.css";
 import { useDispatch } from "react-redux";
 import "./Style/RegisterStyle.css";
 import { userLogin, userRegister } from "../Js/Slice/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Auth = (userCurrent) => {
   const [isLoginView, setIsLoginView] = useState(true);
@@ -47,7 +47,7 @@ const Auth = (userCurrent) => {
     password: "",
     phoneNumber: "",
     isDoctor: false,
-    specialty:"",
+    specialty: "",
     address: "",
   });
 
@@ -116,13 +116,14 @@ const Auth = (userCurrent) => {
                   <button type="submit" className="login-btn">
                     LOGIN
                   </button>
-                  <button type="button" className="forgot-btn">
-                    Forgot Password?
-                  </button>
+                  <Link to="/reset" className="forgot-password">
+                    <button type="button" className="forgot-btn">
+                      Forgot Password?
+                    </button>
+                  </Link>
                 </div>
               </form>
             </div>
-           
           </div>
         </div>
       ) : (
@@ -202,7 +203,7 @@ const Auth = (userCurrent) => {
                     checked={registerData.isDoctor}
                     onChange={handleRegisterChange}
                   />
-                  {registerData.isDoctor ? 
+                  {registerData.isDoctor ? (
                     <div className="isDoctor">
                       <input
                         className="input"
@@ -222,8 +223,10 @@ const Auth = (userCurrent) => {
                         onChange={handleRegisterChange}
                         required={registerData.isDoctor}
                       />
-                    </div> : ""
-                  }
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </label>
                 <div className="double-btn">
                   <button type="submit" className="register-btn">
@@ -232,7 +235,6 @@ const Auth = (userCurrent) => {
                 </div>
               </form>
             </div>
-            
           </div>
         </div>
       )}

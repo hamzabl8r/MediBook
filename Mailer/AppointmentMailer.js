@@ -14,14 +14,13 @@ const transporter = nodemailer.createTransport({
  * @param {object} doctor 
  * @param {object} appointment 
  */
-const sendAppointmentConfirmationEmail = async (
-  patient,
-  doctor,
-  savedAppointment,
-  date,
-  time
-) => {
-  try {
+const sendAppointmentConfirmationEmail = async (patient,doctor,savedAppointment,date,time) => {
+const appointmentDate = new Date(date).toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });  try {
     
 
     const mailOptions = {

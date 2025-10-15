@@ -102,3 +102,31 @@
   background-color: #dc3545; 
   color: white;
 }
+
+/* Responsive  */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 10px 20px;
+    height: 65px;
+  }
+
+  .navbar-logo .logo-png {
+    margin-left: 0;
+    height: 80px;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-actions {
+    gap: 10px;
+  }
+
+  .login-btn,
+  .appointment-btn,
+  .logout-btn {
+    padding: 8px 18px;
+    font-size: 0.85rem;
+  }
+}

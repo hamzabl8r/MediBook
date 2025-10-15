@@ -49,8 +49,7 @@ const Profil = () => {
                 return <AppointmentList appointments={patientAppointments} user={user} />;
             case "findDoctor":
                 return <div className="showDoctor"><FindDoctorsPage /></div>;
-            case "settings":
-                return <div className="showProfil"><h1>Settings</h1><p>Settings page is under construction.</p></div>;
+            
             default:
                 return <ProfilDetails user={user} />;
         }
@@ -72,7 +71,6 @@ const Profil = () => {
                         {!user.isDoctor && (
                             <li className={`li ${activeView === 'findDoctor' ? 'active' : ''}`} onClick={() => setActiveView("findDoctor")}>Find Doctor</li>
                         )}
-                        <li className={`li ${activeView === 'settings' ? 'active' : ''}`} onClick={() => setActiveView("settings")}>Settings</li>
                     </div>
                 </div>
                 <div className="right">

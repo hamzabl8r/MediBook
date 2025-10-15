@@ -125,3 +125,36 @@
   text-align: center;
   padding: 40px;
 }
+
+
+/* Responsive at 768px */
+
+@media (max-width: 768px) {
+  .appointment-list-container {
+    padding: 15px;
+    height: auto;
+  }
+
+  .appointment-list-container h2 {
+    font-size: 1.6rem;
+  }
+
+  .appointment-list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+  }
+
+  .appointment-card-item {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .appointment-actions {
+    flex-direction: column;
+  }
+
+  .appointment-actions button {
+    width: 100%;
+    padding: 10px;
+  }
+}

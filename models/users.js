@@ -36,8 +36,10 @@ const userSchema = new schema({
   address: {
     type: String
   },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
     
-}); 
+}, { timestamps: true }); 
  
 module.exports = mongoose.model("User", userSchema);
  

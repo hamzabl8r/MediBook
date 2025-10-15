@@ -110,4 +110,36 @@
         cursor: pointer;
 }
 
+/* Responsive  */
+@media (max-width: 768px) {
+  .register {
+    height: auto;
+    padding: 40px 0;
+  }
 
+  .register-container {
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+    padding-bottom: 30px;
+  }
+
+  .logo {
+    width: 250px;
+    height: auto;
+  }
+
+  .btn-head {
+    width: 80%;
+  }
+
+  .input {
+    width: 90%;
+  }
+
+  .register-btn {
+    width: 90%;
+    padding: 0;
+    text-align: center;
+  }
+}

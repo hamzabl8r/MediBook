@@ -1,40 +1,56 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const userRegister = createAsyncThunk("user/register", async (user) => {
-  try {
-    const response = await axios.post(
-      "https://medibook-2o0m.onrender.com/user/register",
-      user
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
+export const userRegister = createAsyncThunk(
+  "user/register",
+  async (user, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        "https://medibook-2o0m.onrender.com/user/register",
+        user
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
-});
+);
 
-export const userLogin = createAsyncThunk("user/login", async (user) => {
-  try {
-    const response = await axios.post("https://medibook-2o0m.onrender.com/user/login", user);
-    return response.data;
-  } catch (error) {
-    console.log(error);
+export const userLogin = createAsyncThunk(
+  "user/login",
+  async (user, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        "https://medibook-2o0m.onrender.com/user/login",
+        user
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
-});
-export const userCurrent = createAsyncThunk("user/current", async () => {
-  try {
-    const response = await axios.get("https://medibook-2o0m.onrender.com/user/current", {
-      headers: {
-        Authorization: localStorage.getItem("token"),
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-});
+);
 
-// Update User
+export const userCurrent = createAsyncThunk(
+  "user/current",
+  async (thunkAPI) => { 
+    try {
+      const response = await axios.get(
+        "https://medibook-2o0m.onrender.com/user/current",
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Update User 
 export const editUser = createAsyncThunk(
   "user/update",
   async ({ id, editprofil }, { rejectWithValue }) => {
@@ -50,24 +66,33 @@ export const editUser = createAsyncThunk(
   }
 );
 
-// delete User
-export const deleteUser = createAsyncThunk("user/delete", async (id) => {
-  try {
-    const response = await axios.delete(`https://medibook-2o0m.onrender.com/user/${id}`);
-    return response.data;
-  } catch (error) {
-    console.log(error);
+export const deleteUser = createAsyncThunk(
+  "user/delete",
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios.delete(
+        `https://medibook-2o0m.onrender.com/user/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
-});
-export const getAllUsers = createAsyncThunk("user/getAll", async () => {
-  try {
-    const response = await axios.get("https://medibook-2o0m.onrender.com/user");
-    return response.data;
-  } catch (error) {
-    console.log(error);
+);
+
+export const getAllUsers = createAsyncThunk(
+  "user/getAll",
+  async (thunkAPI) => { 
+    try {
+      const response = await axios.get("https://medibook-2o0m.onrender.com/user");
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   }
-});
-// forgot password
+);
+
+// forgot password 
 export const forgotPassword = createAsyncThunk(
   "user/forgotPassword",
   async (email, { rejectWithValue }) => {
@@ -76,7 +101,7 @@ export const forgotPassword = createAsyncThunk(
         "https://medibook-2o0m.onrender.com/user/forgot-password",
         { email }
       );
-      return response.data.message; 
+      return response.data.message;
     } catch (error) {
       return rejectWithValue(
         error.response?.data || "Erreur lors de l'envoi de l'email"
@@ -84,23 +109,25 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
-//  reset password
-
+//  reset password 
 export const resetPassword = createAsyncThunk(
-    'user/resetPassword',
-    async ({ token, password }, { rejectWithValue }) => {
-        try {
-            const response = await axios.put(`https://medibook-2o0m.onrender.com/user/reset-password/${token}`, { password });
-            
-            return response.data;
-        } catch (error) {
-            return rejectWithValue(error.response.data);
-        }
+  "user/resetPassword",
+  async ({ token, password }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `https://medibook-2o0m.onrender.com/user/reset-password/${token}`,
+        { password }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
+  }
 );
 export const initialState = {
   user: null,
-  status: null,
+  status: null, 
   error: null,
   message: null,
   userList: [],
@@ -190,13 +217,14 @@ export const userSlice = createSlice({
         state.message = action.payload.msg;
       })
       .addCase(resetPassword.rejected, (state, action) => {
-    state.status = 'failed';
-    if (action.payload && action.payload.msg) {
-        state.error = action.payload.msg;
-    } else {
-        state.error = 'An unexpected error occurred. Please check your connection and try again.';
-    }
-})
+        state.status = "failed";
+        if (action.payload && action.payload.msg) {
+          state.error = action.payload.msg;
+        } else {
+          state.error =
+            "An unexpected error occurred. Please check your connection and try again.";
+        }
+      })
 
       // Edit User (NEW)
       .addCase(editUser.pending, (state) => {
@@ -219,24 +247,10 @@ export const userSlice = createSlice({
         state.status = "success";
         state.userList = action.payload.users;
       })
-      .addCase(getAllUsers.rejected, (state) => {
+      .addCase(getAllUsers.rejected, (state, action) => {
         state.status = "fail";
+        state.error = action.payload;
       })
-
-      // get all users
-      // .addCase(getuser.pending, (state) => {
-      //   state.status = "pending";
-      //   state.error = null;
-      // })
-      // .addCase(getuser.fulfilled, (state, action) => {
-      //   state.status = "success";
-      //   state.userList = action.payload.data?.users || [];
-      // })
-      // .addCase(getuser.rejected, (state, action) => {
-      //   state.status = "fail";
-      //   state.userList = [];
-      //   state.error = action.payload;
-      // })
 
       // delete user
       .addCase(deleteUser.pending, (state) => {
@@ -256,5 +270,3 @@ export const userSlice = createSlice({
 
 export const { logout, clearMessage } = userSlice.actions;
 export default userSlice.reducer;
-
-// Action creators are generated for each case reducer function

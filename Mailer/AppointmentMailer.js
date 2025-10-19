@@ -34,8 +34,8 @@ const appointmentDate = new Date(date).toLocaleDateString('en-US', {
                     </p>
                     <h3>Appointment Details:</h3>
                     <ul>
-                        <li><strong>Doctor:</strong> Dr. ${doctor.name}</li>
-                        <li><strong>Date:</strong> ${date}</li>
+                        <li><strong style="color: #0056b3;">Doctor: Dr. ${doctor.name}</strong></li>
+                        <li><strong>Date:</strong> ${appointmentDate}</li>
                         <li><strong>Time:</strong> ${time}</li>
                     </ul>
                     <p>If you need to reschedule or cancel, please contact us at least 24 hours in advance.</p>

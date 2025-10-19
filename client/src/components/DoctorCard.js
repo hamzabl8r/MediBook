@@ -1,12 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 
 const DoctorCard = ({ doctor }) => {
   const navigate = useNavigate();
 
   const handleBookAppointment = () => {
-    navigate(`/appointement`);
+    navigate(`/appointement/${doctor._id}`);
   };
+  const user = useSelector((state) => state.user.user);
+  if (user?.isDoctor) {
+    return null; 
+  }
+
 
   return (
     <div className="doctor-card">

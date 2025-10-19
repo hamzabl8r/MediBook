@@ -2,34 +2,105 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAllUsers } from '../Js/Slice/userSlice';
-import { addAppointement } from '../Js/Slice/appointementSlice'; 
+import { addAppointement, getApp } from '../Js/Slice/appointementSlice';
 import './Style/Appointement.css';
+import DoctorFilters from '../components/DoctorFilters'; 
+import './Style/DoctorsStyle.css'; 
 
-
-const DoctorSelector = ({ doctors, selectedDoctor, onSelect, onNext }) => (
-    <div className="step-content">
-        <h3>Select a Doctor</h3>
-        <div className="doctor-selection-grid">
-            {doctors.map(doctor => (
-                <div
-                    key={doctor._id}
-                    className={`doctor-option ${selectedDoctor?._id === doctor._id ? 'selected' : ''}`}
-                    onClick={() => onSelect(doctor)}
+const Step1DoctorCard = ({ doctor, onSelect }) => {
+    
+    const handleBookAppointment = () => {
+        onSelect(doctor); 
+    };
+    
+    return (
+        <div className="doctor-card">
+            <img
+                src={doctor.image || "/user.jpg"}
+                alt={doctor.name}
+                className="doctor-image"
+            />
+            <div className="doctor-info">
+                <h3 className="doctor-name">{doctor.name}</h3>
+                <p className="doctor-specialty">{doctor.specialty || "N/A"}</p>
+                <p className="doctor-location">{doctor.location || "N/A"}</p>
+                <p className="doctor-phone">{doctor.phoneNumber || "N/A"}</p>
+                <div className="doctor-rating">⭐ {doctor.rating || "N/A"}</div>
+                <p className="doctor-fee">Consultation Fee: 60 TND</p>
+                <button
+                    className="book-appointment-btn available"
+                    onClick={handleBookAppointment}
                 >
-                    <img src={doctor.image || '/user.jpg'} alt={doctor.name} />
-                    <p><strong>{doctor.name}</strong></p>
-                    <p>{doctor.specialty || 'N/A'}</p>
-                    <p>60 TND</p>
-                </div>
-            ))}
+                    Book Appointment
+                </button>
+            </div>
         </div>
-        <button className="main-btn" onClick={onNext} disabled={!selectedDoctor}>
-            Next
-        </button>
-    </div>
-);
+    );
+};
 
-// Date & Time 
+const Step1DoctorSelection = ({ doctors, onSelectDoctor }) => {
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedSpecialty, setSelectedSpecialty] = useState("");
+    const [selectedLocation, setSelectedLocation] = useState("");
+    const [filteredDoctors, setFilteredDoctors] = useState(doctors); 
+
+    useEffect(() => {
+        let tempDoctors = doctors;
+
+        if (searchTerm) {
+            tempDoctors = tempDoctors.filter((doctor) =>
+                doctor.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+        if (selectedSpecialty) {
+            tempDoctors = tempDoctors.filter(
+                (doctor) => doctor.specialty === selectedSpecialty
+            );
+        }
+        if (selectedLocation) {
+            tempDoctors = tempDoctors.filter(
+                (doctor) => doctor.location === selectedLocation
+            );
+        }
+        setFilteredDoctors(tempDoctors);
+    }, [searchTerm, selectedSpecialty, selectedLocation, doctors]);
+
+    const specialties = [...new Set(doctors.map((d) => d.specialty).filter(Boolean))];
+    const locations = [...new Set(doctors.map((d) => d.location).filter(Boolean))];
+
+    return (
+        <div className="step-content">
+            <DoctorFilters
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                selectedSpecialty={selectedSpecialty}
+                setSelectedSpecialty={setSelectedSpecialty}
+                selectedLocation={selectedLocation}
+                setSelectedLocation={setSelectedLocation}
+                specialties={specialties}
+                locations={locations}
+            />
+
+            <div className="doctors-list">
+                {filteredDoctors.length > 0 ? (
+                    filteredDoctors.map((doctor) => (
+                        <Step1DoctorCard 
+                            key={doctor._id} 
+                            doctor={doctor} 
+                            onSelect={onSelectDoctor}
+                        />
+                    ))
+                ) : (
+                    <p className="no-doctors-found" style={{textAlign: 'center', marginTop: '20px'}}>
+                        No doctors found matching your criteria.
+                    </p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+
 const DateTimePicker = ({ doctor, selectedDate, onSelectDate, selectedTime, onSelectTime, onNext, onBack }) => {
     const today = new Date();
     const currentYear = today.getFullYear();
@@ -39,7 +110,33 @@ const DateTimePicker = ({ doctor, selectedDate, onSelectDate, selectedTime, onSe
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
 
-    const availableTimes = ['09:00 AM', '10:30 AM', '11:00 AM', '01:00 PM', '02:30 PM', '04:00 PM'];
+    const { appointementList } = useSelector(state => state.appointements);
+
+    const allPossibleTimes = ['09:00 AM', '10:30 AM', '11:00 AM', '01:00 PM', '02:30 PM', '04:00 PM'];
+
+    const trulyAvailableTimes = useMemo(() => {
+        if (!selectedDate) {
+            return [];
+        }
+
+        let available = [...allPossibleTimes];
+        const fullSelectedDate = new Date(currentYear, currentMonth, selectedDate);
+        
+        const bookedTimes = (appointementList || [])
+            .filter(rdv => {
+                const rdvDate = new Date(rdv.selectedDate);
+                return rdv.doctorId === doctor._id &&
+                       rdvDate.getDate() === fullSelectedDate.getDate() &&
+                       rdvDate.getMonth() === fullSelectedDate.getMonth() &&
+                       rdvDate.getFullYear() === fullSelectedDate.getFullYear();
+            })
+            .map(rdv => rdv.selectedTime);
+
+        available = available.filter(time => !bookedTimes.includes(time));
+        
+        return available;
+
+    }, [selectedDate, doctor, appointementList, currentYear, currentMonth]);
 
     return (
         <div className="step-content">
@@ -70,11 +167,19 @@ const DateTimePicker = ({ doctor, selectedDate, onSelectDate, selectedTime, onSe
                 <div className="time-slots">
                     <h4>Available Times</h4>
                     <div className="time-grid">
-                        {availableTimes.map(time => (
-                            <span key={time} className={`time-slot ${selectedTime === time ? 'selected' : ''}`} onClick={() => onSelectTime(time)}>
-                                {time}
-                            </span>
-                        ))}
+                        {trulyAvailableTimes.length > 0 ? (
+                            trulyAvailableTimes.map(time => (
+                                <span 
+                                    key={time} 
+                                    className={`time-slot ${selectedTime === time ? 'selected' : ''}`} 
+                                    onClick={() => onSelectTime(time)}
+                                >
+                                    {time}
+                                </span>
+                            ))
+                        ) : (
+                            <p>No available slots for this day.</p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -87,8 +192,6 @@ const DateTimePicker = ({ doctor, selectedDate, onSelectDate, selectedTime, onSe
         </div>
     );
 };
-
-// Confirmation Step
 const Confirmation = ({ doctor, date, time, onConfirm, onBack, status }) => {
     const formatDate = (day) => {
         if (!day) return '';
@@ -117,7 +220,6 @@ const Confirmation = ({ doctor, date, time, onConfirm, onBack, status }) => {
     );
 };
 
-//  Booking Confirmed View
 const BookingConfirmed = ({ bookingDetails }) => {
     const navigate = useNavigate();
     const { doctor, date, time } = bookingDetails;
@@ -145,36 +247,41 @@ const BookingConfirmed = ({ bookingDetails }) => {
     );
 };
 
-
-//  Appointment 
 const Appointment = () => {
     const { doctorId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { userList, user: currentUser } = useSelector((state) => state.user);
-const { status: appointmentStatus, error: appointmentError } = useSelector((state) => state.appointements); 
-
+    const { userList, user: currentUser, status: userStatus } = useSelector((state) => state.user);
+    const { status: appointmentStatus, appointementList } = useSelector((state) => state.appointements);
     const doctors = useMemo(() => userList.filter(user => user.isDoctor), [userList]);
 
-    const [currentStep, setCurrentStep] = useState(1);
+  
+    const [currentStep, setCurrentStep] = useState(doctorId ? 2 : 1);
+    
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
     const [isConfirmed, setIsConfirmed] = useState(false);
 
     useEffect(() => {
-        if (userList.length === 0) {
+        if (userList.length === 0 && userStatus !== 'loading' && userStatus !== 'succeeded') {
             dispatch(getAllUsers());
         }
-    }, [dispatch, userList.length]);
+    }, [dispatch, userList.length, userStatus]);
+
+    useEffect(() => {
+        if (!appointementList && appointmentStatus !== 'loading' && appointmentStatus !== 'succeeded') {
+            dispatch(getApp());
+        }
+    }, [dispatch, appointementList, appointmentStatus]);
+
 
     useEffect(() => {
         if (doctorId && doctors.length > 0) {
             const doctorFromUrl = doctors.find(doc => doc._id === doctorId);
             if (doctorFromUrl) {
                 setSelectedDoctor(doctorFromUrl);
-                setCurrentStep(2);
             }
         }
     }, [doctorId, doctors]);
@@ -185,7 +292,6 @@ const { status: appointmentStatus, error: appointmentError } = useSelector((stat
             navigate('/login');
             return;
         }
-
         const newAppointement = {
             doctorId: selectedDoctor._id,
             patientId: currentUser._id,
@@ -193,18 +299,30 @@ const { status: appointmentStatus, error: appointmentError } = useSelector((stat
             selectedTime: selectedTime,
             fee: 60,
         };
-
         try {
             await dispatch(addAppointement(newAppointement)).unwrap();
             setIsConfirmed(true);
+            dispatch(getApp());
         } catch (error) {
             console.error("Failed to book appointment:", error);
             alert(error.msg || "An error occurred. Please try again.");
         }
     };
-    
+
     if (isConfirmed) {
         return <BookingConfirmed bookingDetails={{ doctor: selectedDoctor, date: selectedDate, time: selectedTime }} />;
+    }
+
+    if (doctorId && currentStep === 2 && !selectedDoctor && (userStatus === 'loading' || userStatus === 'idle')) {
+         return (
+            <div className="appointment-page">
+                <div className="appointment-card">
+                     <div className="step-content" style={{ textAlign: 'center', padding: '40px' }}>
+                        <p>Loading doctor details...</p>
+                    </div>
+                </div>
+            </div>
+         );
     }
 
     return (
@@ -213,42 +331,65 @@ const { status: appointmentStatus, error: appointmentError } = useSelector((stat
                 <div className="appointment-header">
                     <h2>Book an Appointment</h2>
                     <div className="step-indicator">
-                        <span className={`step ${currentStep === 1 ? 'active' : ''}`}>1. Doctor</span>
-                        <span className={`step ${currentStep === 2 ? 'active' : ''}`}>2. Date & Time</span>
-                        <span className={`step ${currentStep === 3 ? 'active' : ''}`}>3. Confirm</span>
+                        <span className={`step ${currentStep >= 1 ? 'active' : ''}`}>1. Select Doctor</span>
+                        <span className={`step ${currentStep >= 2 ? 'active' : ''}`}>2. Date & Time</span>
+                        <span className={`step ${currentStep >= 3 ? 'active' : ''}`}>3. Confirm</span>
                     </div>
                 </div>
 
                 {currentStep === 1 && (
-                    <DoctorSelector 
+                    <Step1DoctorSelection
                         doctors={doctors}
-                        selectedDoctor={selectedDoctor}
-                        onSelect={setSelectedDoctor}
-                        onNext={() => setCurrentStep(2)}
+                        onSelectDoctor={(doctor) => {
+                            setSelectedDoctor(doctor);
+                            setCurrentStep(2);
+                        }}
                     />
                 )}
 
-                {currentStep === 2 && selectedDoctor && (
-                     <DateTimePicker 
-                        doctor={selectedDoctor}
-                        selectedDate={selectedDate}
-                        onSelectDate={setSelectedDate}
-                        selectedTime={selectedTime}
-                        onSelectTime={setSelectedTime}
-                        onNext={() => setCurrentStep(3)}
-                        onBack={() => doctorId ? navigate('/find-doctor') : setCurrentStep(1)}
-                     />
+                {currentStep === 2 && (
+                    <>
+                        {selectedDoctor ? (
+                            <DateTimePicker
+                                doctor={selectedDoctor}
+                                selectedDate={selectedDate}
+                                onSelectDate={setSelectedDate}
+                                selectedTime={selectedTime}
+                                onSelectTime={setSelectedTime}
+                                onNext={() => setCurrentStep(3)}
+                                onBack={() => {
+                                    if (doctorId) { 
+                                        navigate('/find-doctor');
+                                    } else { 
+                                        setCurrentStep(1);
+                                    }
+                                }}
+                            />
+                        ) : (
+                            <div className="step-content" style={{ textAlign: 'center', padding: '40px' }}>
+                                <p>Loading doctor details...</p>
+                            </div>
+                        )}
+                    </>
                 )}
 
-                {currentStep === 3 && selectedDoctor && (
-                    <Confirmation 
-                        doctor={selectedDoctor}
-                        date={selectedDate}
-                        time={selectedTime}
-                        onConfirm={handleConfirmBooking}
-                        onBack={() => setCurrentStep(2)}
-                        status={appointmentStatus}
-                    />
+                {currentStep === 3 && (
+                     <>
+                        {selectedDoctor ? (
+                            <Confirmation
+                                doctor={selectedDoctor}
+                                date={selectedDate}
+                                time={selectedTime}
+                                onConfirm={handleConfirmBooking}
+                                onBack={() => setCurrentStep(2)}
+                                status={appointmentStatus}
+                            />
+                        ) : (
+                             <div className="step-content" style={{ textAlign: 'center', padding: '40px' }}>
+                                <p>Loading confirmation...</p>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

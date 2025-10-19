@@ -4,7 +4,7 @@ import axios from "axios";
 export const userRegister = createAsyncThunk("user/register", async (user) => {
   try {
     const response = await axios.post(
-      "https://medibook-2o0m.onrender.com//user/register",
+      "https://medibook-2o0m.onrender.com/user/register",
       user
     );
     return response.data;

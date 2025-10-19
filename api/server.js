@@ -17,7 +17,21 @@ const Contact = require('./routes/contactRoutes')
 
 connectDB() 
 app.use(express.json())
-app.use(cors({ origin: 'https://medibook-1-e9bu.onrender.com' }));
+const corsOptions = {
+  origin: [
+    'https://medibook-1-e9bu.onrender.com',
+    'http://localhost:3000', 
+    'http://localhost:5173'  
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })

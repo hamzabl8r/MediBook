@@ -6,7 +6,7 @@ export const userRegister = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(
-        "https://medibook-2o0m.onrender.com/user/register",
+        "https://medibook-1-e9bu.onrender.com/user/register",
         user
       );
       return response.data;
@@ -21,7 +21,7 @@ export const userLogin = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(
-        "https://medibook-2o0m.onrender.com/user/login",
+        "https://medibook-1-e9bu.onrender.com/user/login",
         user
       );
       return response.data;
@@ -36,7 +36,7 @@ export const userCurrent = createAsyncThunk(
   async (thunkAPI) => { 
     try {
       const response = await axios.get(
-        "https://medibook-2o0m.onrender.com/user/current",
+        "https://medibook-1-e9bu.onrender.com/user/current",
         {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -56,7 +56,7 @@ export const editUser = createAsyncThunk(
   async ({ id, editprofil }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `https://medibook-2o0m.onrender.com/user/${id}`,
+        `https://medibook-1-e9bu.onrender.com/user/${id}`,
         editprofil
       );
       return response.data;
@@ -71,7 +71,7 @@ export const deleteUser = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `https://medibook-2o0m.onrender.com/user/${id}`
+        `https://medibook-1-e9bu.onrender.com/user/${id}`
       );
       return response.data;
     } catch (error) {
@@ -84,7 +84,7 @@ export const getAllUsers = createAsyncThunk(
   "user/getAll",
   async (thunkAPI) => { 
     try {
-      const response = await axios.get("https://medibook-2o0m.onrender.com/user");
+      const response = await axios.get("https://medibook-1-e9bu.onrender.com/user");
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -98,7 +98,7 @@ export const forgotPassword = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "https://medibook-2o0m.onrender.com/user/forgot-password",
+        "https://medibook-1-e9bu.onrender.com/user/forgot-password",
         { email }
       );
       return response.data.message;
@@ -115,7 +115,7 @@ export const resetPassword = createAsyncThunk(
   async ({ token, password }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `https://medibook-2o0m.onrender.com/user/reset-password/${token}`,
+        `https://medibook-1-e9bu.onrender.com/user/reset-password/${token}`,
         { password }
       );
 

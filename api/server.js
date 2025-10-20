@@ -17,7 +17,10 @@ const Contact = require('./routes/contactRoutes')
 
 connectDB() 
 app.use(express.json())
-
+const corsOptions = {
+    origin: 'https://medibook-project.vercel.app', 
+    optionsSuccessStatus: 200 
+};
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));

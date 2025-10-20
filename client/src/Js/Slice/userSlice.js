@@ -6,7 +6,7 @@ export const userRegister = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(
-        "https://medibook-fawn.vercel.app/user/register",
+        "medi-book-nine.vercel.app/user/register",
         user
       );
       return response.data;
@@ -21,7 +21,7 @@ export const userLogin = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(
-        "https://medibook-fawn.vercel.app/user/login",
+        "medi-book-nine.vercel.app/user/login",
         user
       );
       return response.data;
@@ -36,7 +36,7 @@ export const userCurrent = createAsyncThunk(
   async (thunkAPI) => { 
     try {
       const response = await axios.get(
-        "https://medibook-fawn.vercel.app/user/current",
+        "medi-book-nine.vercel.app/user/current",
         {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -56,7 +56,7 @@ export const editUser = createAsyncThunk(
   async ({ id, editprofil }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `https://medibook-fawn.vercel.app/user/${id}`,
+        `medi-book-nine.vercel.app/user/${id}`,
         editprofil
       );
       return response.data;
@@ -71,7 +71,7 @@ export const deleteUser = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `https://medibook-fawn.vercel.app/user/${id}`
+        `medi-book-nine.vercel.app/user/${id}`
       );
       return response.data;
     } catch (error) {
@@ -84,7 +84,7 @@ export const getAllUsers = createAsyncThunk(
   "user/getAll",
   async (thunkAPI) => { 
     try {
-      const response = await axios.get("https://medibook-fawn.vercel.app/user");
+      const response = await axios.get("medi-book-nine.vercel.app/user");
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -98,7 +98,7 @@ export const forgotPassword = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "https://medibook-fawn.vercel.app/user/forgot-password",
+        "medi-book-nine.vercel.app/user/forgot-password",
         { email }
       );
       return response.data.message;
@@ -115,7 +115,7 @@ export const resetPassword = createAsyncThunk(
   async ({ token, password }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `https://medibook-fawn.vercel.app/user/reset-password/${token}`,
+        `medi-book-nine.vercel.app/user/reset-password/${token}`,
         { password }
       );
 

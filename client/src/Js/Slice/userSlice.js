@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // ✅ Backend URL - IMPORTANT: Add https://
-const API_URL = "https://medi-book-nine.vercel.app";
+const API_URL = "https://medi-book-three.vercel.app";
 
 export const userRegister = createAsyncThunk(
   "user/register",

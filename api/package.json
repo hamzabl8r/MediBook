@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "client": "cd ./client && npm start",
+    "client": "cd ../client && npm start",
     "back": "nodemon server.js",
     "dev": "concurrently \"npm run back\" \"npm run client\""
   },

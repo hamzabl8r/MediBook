@@ -6,7 +6,7 @@ export const getApp = createAsyncThunk(
   "appointement/get",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("https://medibook-1-e9bu.onrender.com/appointement");
+      const response = await axios.get("https://medibook-fawn.vercel.app/appointement");
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -20,7 +20,7 @@ export const addAppointement = createAsyncThunk(
   async (newAppointement, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `https://medibook-1-e9bu.onrender.com/appointement/add`,
+        `https://medibook-fawn.vercel.app/appointement/add`,
         newAppointement
       );
       return response.data;
@@ -35,7 +35,7 @@ export const deleteAppointement = createAsyncThunk(
   "appointement/delete",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`https://medibook-1-e9bu.onrender.com/appointement/${id}`);
+      await axios.delete(`https://medibook-fawn.vercel.app/appointement/${id}`);
       return { id };
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -49,7 +49,7 @@ export const updateAppointement = createAsyncThunk(
   async ({ id, updatedData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `https://medibook-1-e9bu.onrender.com/appointement/${id}`,
+        `https://medibook-fawn.vercel.app/appointement/${id}`,
         updatedData
       );
       return response.data;
@@ -64,7 +64,7 @@ export const getAppByDoctorId = createAsyncThunk(
   async (doctorId, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `https://medibook-1-e9bu.onrender.com/appointement/doctor/${doctorId}`
+        `https://medibook-fawn.vercel.app/appointement/doctor/${doctorId}`
       );
       return response.data;
     } catch (error) {

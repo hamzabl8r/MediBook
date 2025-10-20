@@ -29,7 +29,7 @@ const HomePage = () => {
                 <div className="hero-content">
                     <h1>Your Health, Our Priority.</h1>
                     <p>Find & Book the best doctors online with ease.</p>
-                    <Link to="/doctor" className="cta-button">Find a Doctor Now</Link>
+                    <Link to="/appointementw" className="cta-button">Find a Doctor Now</Link>
                 </div>
             </section>
 

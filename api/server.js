@@ -19,7 +19,7 @@ connectDB()
 app.use(express.json())
 const corsOptions = {
   origin: [
-    'https://medibook-project.vercel.app/',
+    'https://medibook-project.vercel.app',
     'http://localhost:3000', 
     'http://localhost:5173'  
   ],

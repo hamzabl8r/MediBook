@@ -1,12 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+// ✅ Backend URL - IMPORTANT: Add https://
+const API_URL = "https://medi-book-nine.vercel.app";
+
 export const userRegister = createAsyncThunk(
   "user/register",
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(
-        "medi-book-nine.vercel.app/user/register",
+        `${API_URL}/user/register`,
         user
       );
       return response.data;
@@ -21,7 +24,7 @@ export const userLogin = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(
-        "medi-book-nine.vercel.app/user/login",
+        `${API_URL}/user/login`,
         user
       );
       return response.data;
@@ -33,10 +36,10 @@ export const userLogin = createAsyncThunk(
 
 export const userCurrent = createAsyncThunk(
   "user/current",
-  async (thunkAPI) => { 
+  async (_, thunkAPI) => { // ✅ Fixed: _ instead of thunkAPI as parameter
     try {
       const response = await axios.get(
-        "medi-book-nine.vercel.app/user/current",
+        `${API_URL}/user/current`,
         {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -56,12 +59,12 @@ export const editUser = createAsyncThunk(
   async ({ id, editprofil }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `medi-book-nine.vercel.app/user/${id}`,
+        `${API_URL}/user/${id}`,
         editprofil
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Failed to update user ");
+      return rejectWithValue(error.response?.data || "Failed to update user");
     }
   }
 );
@@ -71,7 +74,7 @@ export const deleteUser = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `medi-book-nine.vercel.app/user/${id}`
+        `${API_URL}/user/${id}`
       );
       return response.data;
     } catch (error) {
@@ -82,9 +85,9 @@ export const deleteUser = createAsyncThunk(
 
 export const getAllUsers = createAsyncThunk(
   "user/getAll",
-  async (thunkAPI) => { 
+  async (_, thunkAPI) => { // ✅ Fixed: _ instead of thunkAPI as parameter
     try {
-      const response = await axios.get("medi-book-nine.vercel.app/user");
+      const response = await axios.get(`${API_URL}/user`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -98,7 +101,7 @@ export const forgotPassword = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "medi-book-nine.vercel.app/user/forgot-password",
+        `${API_URL}/user/forgot-password`,
         { email }
       );
       return response.data.message;
@@ -109,22 +112,23 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
-//  reset password 
+
+// reset password 
 export const resetPassword = createAsyncThunk(
   "user/resetPassword",
   async ({ token, password }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `medi-book-nine.vercel.app/user/reset-password/${token}`,
+        `${API_URL}/user/reset-password/${token}`,
         { password }
       );
-
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
+
 export const initialState = {
   user: null,
   status: null, 
@@ -193,7 +197,7 @@ export const userSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Forgot Password (NEW)
+      // Forgot Password
       .addCase(forgotPassword.pending, (state) => {
         state.status = "pending";
         state.error = null;
@@ -206,6 +210,7 @@ export const userSlice = createSlice({
         state.status = "failed";
         state.error = action.payload.msg;
       })
+      
       // Reset Password
       .addCase(resetPassword.pending, (state) => {
         state.status = "loading";
@@ -221,12 +226,11 @@ export const userSlice = createSlice({
         if (action.payload && action.payload.msg) {
           state.error = action.payload.msg;
         } else {
-          state.error =
-            "An unexpected error occurred. Please check your connection and try again.";
+          state.error = "An unexpected error occurred. Please check your connection and try again.";
         }
       })
 
-      // Edit User (NEW)
+      // Edit User
       .addCase(editUser.pending, (state) => {
         state.status = "pending";
         state.error = null;
@@ -239,7 +243,8 @@ export const userSlice = createSlice({
         state.status = "fail";
         state.error = action.payload;
       })
-      // get all users
+      
+      // Get all users
       .addCase(getAllUsers.pending, (state) => {
         state.status = "pending";
       })
@@ -252,7 +257,7 @@ export const userSlice = createSlice({
         state.error = action.payload;
       })
 
-      // delete user
+      // Delete user
       .addCase(deleteUser.pending, (state) => {
         state.status = "pending";
         state.error = null;
@@ -269,4 +274,4 @@ export const userSlice = createSlice({
 });
 
 export const { logout, clearMessage } = userSlice.actions;
-export default userSlice.reducer;
+export default userSlice.reducer; 

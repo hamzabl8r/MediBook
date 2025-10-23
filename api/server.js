@@ -8,30 +8,11 @@ const app = express()
 const PORT = process.env.PORT || 5000 
 
 
-const allowedOrigins = [
-    'https://medi-book-views.vercel.app',
-    
-];
-
-const corsOptions = {
-    origin: function (origin, callback ) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    },
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
-    credentials: true, 
-    optionsSuccessStatus: 204 
-}
-
-app.use(cors(corsOptions));
-
-app.options('*', cors(corsOptions)); 
-
-// --- FIN DE LA CONFIGURATION CORS CORRIGÉE ---
-
+app.use(cors({
+    origin: 'https://medi-book-views.vercel.app/',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
 
 const Appointment = require('./routes/Appointment')
 const user = require('./routes/user')

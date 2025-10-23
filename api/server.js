@@ -5,7 +5,32 @@ const connectDB = require('./connect')
 const cors = require('cors')
 
 const app = express()
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5000 
+
+
+const allowedOrigins = [
+    'https://medi-book-views.vercel.app',
+    
+];
+
+const corsOptions = {
+    origin: function (origin, callback ) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+    credentials: true, 
+    optionsSuccessStatus: 204 
+}
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions)); 
+
+// --- FIN DE LA CONFIGURATION CORS CORRIGÉE ---
 
 
 const Appointment = require('./routes/Appointment')
@@ -15,24 +40,7 @@ const Contact = require('./routes/contactRoutes')
 
 
 connectDB() 
-app.use(express.json())
-
-
-app.use(express.json());
-app.use(cors(corsOptions)); 
-app.options('*', cors(corsOptions));
-
-
-// ---------------------
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
-// ---------------------
-
-
+app.use(express.json()) 
 
 
 app.get('/', (req, res) => {
@@ -44,7 +52,6 @@ app.use('/appointement' ,Appointment)
 app.use('/current' ,Current)
 app.use('/user' ,user)
 app.use('/contact', Contact)
-
 
 
 app.listen(PORT, () => {

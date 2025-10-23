@@ -8,11 +8,7 @@ const app = express()
 const PORT = process.env.PORT || 5000 
 
 
-app.use(cors({
-    origin: 'https://medi-book-views.vercel.app/',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}))
+app.use(cors())
 
 const Appointment = require('./routes/Appointment')
 const user = require('./routes/user')

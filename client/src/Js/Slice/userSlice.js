@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// const API_URL = "https://medi-book-three.vercel.app";
+// const API_URL = "http://localhost:5000";
 
 export const userRegister = createAsyncThunk(
   "user/register",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post('https://medi-book-three.vercel.app/user/register',user);
+      const response = await axios.post('http://localhost:5000/user/register',user);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -20,7 +20,7 @@ export const userLogin = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(
-        `https://medi-book-three.vercel.app/user/login`,
+        `http://localhost:5000/user/login`,
         user
       );
       return response.data;
@@ -35,7 +35,7 @@ export const userCurrent = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await axios.get(
-        `https://medi-book-three.vercel.app/user/current`,
+        `http://localhost:5000/user/current`,
         {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -55,7 +55,7 @@ export const editUser = createAsyncThunk(
   async ({ id, editprofil }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `https://medi-book-three.vercel.app/user/${id}`,
+        `http://localhost:5000/user/${id}`,
         editprofil
       );
       return response.data;
@@ -70,7 +70,7 @@ export const deleteUser = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await axios.delete(
-        `https://medi-book-three.vercel.app/user/${id}`
+        `http://localhost:5000/user/${id}`
       );
       return response.data;
     } catch (error) {
@@ -83,7 +83,7 @@ export const getAllUsers = createAsyncThunk(
   "user/getAll",
   async (_, thunkAPI) => { // ✅ Fixed: _ instead of thunkAPI as parameter
     try {
-      const response = await axios.get(`https://medi-book-three.vercel.app/user`);
+      const response = await axios.get(`http://localhost:5000/user`);
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -97,7 +97,7 @@ export const forgotPassword = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `https://medi-book-three.vercel.app/user/forgot-password`,
+        `http://localhost:5000/user/forgot-password`,
         { email }
       );
       return response.data.message;
@@ -115,7 +115,7 @@ export const resetPassword = createAsyncThunk(
   async ({ token, password }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `https://medi-book-three.vercel.app/user/reset-password/${token}`,
+        `http://localhost:5000/user/reset-password/${token}`,
         { password }
       );
       return response.data;

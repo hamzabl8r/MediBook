@@ -6,7 +6,7 @@ export const getApp = createAsyncThunk(
   "appointement/get",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("https://medi-book-three.vercel.app/appointement");
+      const response = await axios.get("http://localhost:5000/appointement");
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -20,7 +20,7 @@ export const addAppointement = createAsyncThunk(
   async (newAppointement, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `https://medi-book-three.vercel.app/appointement/add`,
+        `http://localhost:5000/appointement/add`,
         newAppointement
       );
       return response.data;
@@ -35,7 +35,7 @@ export const deleteAppointement = createAsyncThunk(
   "appointement/delete",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`https://medi-book-three.vercel.app/appointement/${id}`);
+      await axios.delete(`http://localhost:5000/appointement/${id}`);
       return { id };
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -49,7 +49,7 @@ export const updateAppointement = createAsyncThunk(
   async ({ id, updatedData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `https://medi-book-three.vercel.app/appointement/${id}`,
+        `http://localhost:5000/appointement/${id}`,
         updatedData
       );
       return response.data;
@@ -64,7 +64,7 @@ export const getAppByDoctorId = createAsyncThunk(
   async (doctorId, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `https://medi-book-three.vercel.app/appointement/doctor/${doctorId}`
+        `http://localhost:5000/appointement/doctor/${doctorId}`
       );
       return response.data;
     } catch (error) {

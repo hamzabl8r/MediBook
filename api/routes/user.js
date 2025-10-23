@@ -9,7 +9,7 @@ const {
   validation,
 } = require("../middleware/validator");
 const { isAuth } = require("../middleware/auth");
-const { userCurrent } = require("../client/src/Js/Slice/userSlice");
+const { userCurrent } = require("../../client/src/Js/Slice/userSlice");
 const users = require("../models/users");
 require("dotenv").config({ path: "../.env" });
 const { sendWelcomeEmail } = require("../Mailer/RegisterMailer");

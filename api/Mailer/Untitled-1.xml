@@ -1,0 +1,18 @@
+<article auteur="body" titre="Intro a XML" >
+    <copyright ></copyright>
+    <section titre="RappelHtml">
+        <para>
+            Balise Html
+        </para>
+    </section>
+    <section titre="Presentation XML">
+        <para>
+           document bien Forme
+        </para>
+        <para>
+            document valide
+        </para>
+    </section>
+
+
+</article>
